@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Biosphere - Medical Innovations</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #eaf5f7;
+            color: #173b4d;
+        }
+
+        header {
+            background: #123d56;
+            color: white;
+            text-align: center;
+            padding: 28px 15px;
+        }
+
+        header h1 {
+            margin-bottom: 8px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 650px;
+            margin: 40px auto;
+        }
+
+        .innovation-section {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            color: #176b56;
+            margin-bottom: 12px;
+        }
+
+        .description {
+            color: #607d8b;
+            margin-bottom: 25px;
+        }
+
+        .input-area {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            min-width: 0;
+            padding: 13px;
+            border: 1px solid #b5cbd0;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+
+        input:focus {
+            outline: 2px solid #16845f;
+        }
+
+        button {
+            background: #176b56;
+            color: white;
+            border: none;
+            padding: 12px 18px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        button:hover {
+            background: #104d3d;
+        }
+
+        h3 {
+            margin-top: 28px;
+            color: #176b56;
+        }
+
+        #message {
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        #innovationList {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        #innovationList li {
+            background: #edf7f1;
+            border-left: 5px solid #176b56;
+            padding: 13px;
+            margin-bottom: 12px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .innovation-text {
+            flex: 1;
+            overflow-wrap: anywhere;
+        }
+
+        .actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .edit-btn {
+            background: #2878a5;
+        }
+
+        .delete-btn {
+            background: #c0392b;
+        }
+
+        .innovation-summary {
+            margin-top: 20px;
+            padding: 15px;
+            background: #e5f3eb;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        footer {
+            background: #123d56;
+            color: white;
+            text-align: center;
+            padding: 18px;
+        }
+
+        @media (max-width: 500px) {
+
+            .innovation-section {
+                padding: 20px;
+            }
+
+            .input-area {
+                flex-direction: column;
+            }
+
+            .input-area button {
+                width: 100%;
+            }
+
+            #innovationList li {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .actions {
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <header>
+
+        <h1>🧬 BIOSPHERE</h1>
+
+        <p>Biotechnology Drive Medical Innovations</p>
+
+    </header>
+
+    <main class="container">
+
+        <section class="innovation-section">
+
+            <h2>Manage Medical Innovations</h2>
+
+            <p class="description">
+                Add and manage biotechnology research
+                and medical innovations.
+            </p>
+
+            <div class="input-area">
+
+                <input
+                    type="text"
+                    id="innovationInput"
+                    placeholder="Enter a medical innovation..."
+                >
+
+                <button onclick="addInnovation()" id="addButton">
+                    Add Innovation
+                </button>
+
+            </div>
+
+            <p id="message"></p>
+
+            <h3>Medical Innovation List</h3>
+
+            <ul id="innovationList">
+            </ul>
+
+            <div class="innovation-summary">
+
+                Total Innovations:
+                <span id="innovationCount">0</span>
+
+            </div>
+
+        </section>
+
+    </main>
+
+    <footer>
+
+        <p>
+            © 2026 Biosphere | Innovating Science for a Healthier Future
+        </p>
+
+    </footer>
+
+    <script>
+
+        // Array to store medical innovations
+
+        let innovations = [];
+
+        // Track the innovation being edited
+
+        let editIndex = -1;
+
+
+        // CREATE - ADD INNOVATION
+
+        function addInnovation() {
+
+            let input = document.querySelector("#innovationInput");
+
+            let innovation = input.value.trim();
+
+            let message = document.querySelector("#message");
+
+            // Input Validation
+
+            if (innovation === "") {
+
+                message.textContent = "Please enter an innovation!";
+
+                message.style.color = "red";
+
+                return;
+
+            }
+
+            // Check whether editing or adding
+
+            if (editIndex === -1) {
+
+                innovations.push(innovation);
+
+                message.textContent =
+                    "Innovation added successfully!";
+
+            }
+
+            else {
+
+                innovations[editIndex] = innovation;
+
+                message.textContent =
+                    "Innovation updated successfully!";
+
+                editIndex = -1;
+
+                document.querySelector("#addButton").textContent =
+                    "Add Innovation";
+
+            }
+
+            message.style.color = "green";
+
+            input.value = "";
+
+            displayInnovations();
+
+        }
+
+
+        // READ - DISPLAY INNOVATIONS
+
+        function displayInnovations() {
+
+            let innovationList =
+                document.querySelector("#innovationList");
+
+            innovationList.replaceChildren();
+
+            innovations.forEach(function(innovation, index) {
+
+                let li = document.createElement("li");
+
+                let span = document.createElement("span");
+
+                span.className = "innovation-text";
+
+                span.textContent = "🧬 " + innovation;
+
+                // Action buttons
+
+                let actions = document.createElement("div");
+
+                actions.className = "actions";
+
+                let editButton = document.createElement("button");
+
+                editButton.textContent = "Edit";
+
+                editButton.className = "edit-btn";
+
+                editButton.onclick = function() {
+
+                    editInnovation(index);
+
+                };
+
+                let deleteButton = document.createElement("button");
+
+                deleteButton.textContent = "Delete";
+
+                deleteButton.className = "delete-btn";
+
+                deleteButton.onclick = function() {
+
+                    deleteInnovation(index);
+
+                };
+
+                actions.append(editButton, deleteButton);
+
+                li.append(span, actions);
+
+                innovationList.appendChild(li);
+
+            });
+
+            // Update innovation count
+
+            document.querySelector("#innovationCount").textContent =
+                innovations.length;
+
+        }
+
+
+        // UPDATE - EDIT INNOVATION
+
+        function editInnovation(index) {
+
+            let input = document.querySelector("#innovationInput");
+
+            input.value = innovations[index];
+
+            editIndex = index;
+
+            document.querySelector("#addButton").textContent =
+                "Update Innovation";
+
+            document.querySelector("#message").textContent =
+                "Edit the innovation and click Update Innovation.";
+
+        }
+
+
+        // DELETE - REMOVE INNOVATION
+
+        function deleteInnovation(index) {
+
+            innovations.splice(index, 1);
+
+            // Cancel editing if the edited item is deleted
+
+            if (editIndex === index) {
+
+                editIndex = -1;
+
+                document.querySelector("#innovationInput").value = "";
+
+                document.querySelector("#addButton").textContent =
+                    "Add Innovation";
+
+            }
+
+            else if (editIndex > index) {
+
+                editIndex--;
+
+            }
+
+            document.querySelector("#message").textContent =
+                "Innovation deleted successfully!";
+
+            document.querySelector("#message").style.color = "green";
+
+            displayInnovations();
+
+        }
+
+    </script>
+
+</body>
+
+</html>
